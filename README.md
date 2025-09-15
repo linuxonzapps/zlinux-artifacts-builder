@@ -16,12 +16,14 @@ This project, `zlinux-artifacts-builder`, is a modular, Dockerized build system 
 This project is licensed under the Apache License, Version 2.0. See the [LICENSE](LICENSE) file for details.
 
 ## Requirements
-- **Operating System**: Linux (tested on Ubuntu 22.04 or later).
+- **Operating System**: Linux IBM Z or LinuxONE (tested on Ubuntu 22.04 or later).
 - **Docker**: For containerized builds (version 22.04 or later).
 - **Python**: 3.10 or later.
 - **GitHub Token**: With `repo` and `write:packages` scopes for cloning, scanning, and publishing.
 - **GitHub CLI (`gh`)**: For publishing to Releases (installed in Docker image).
 - **Python Dependencies**: Listed in `requirements.txt` (e.g., `pyyaml`, `requests`).
+
+_*Note:*_ _Linux IBM Z or LinuxONE `s390x` architecture is required to build the project (if you do not have access to this architecture, you may request a virtual server via the [IBM LinuxONE Community Cloud](https://community.ibm.com/zsystems/l1cc/)._
 
 ## Setup Steps
 To get the system working, follow these steps. The system runs in a Docker container to ensure consistency.
