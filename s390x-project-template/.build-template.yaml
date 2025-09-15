@@ -1,0 +1,13 @@
+template: go-project.yaml
+overrides:
+  artifacts:
+    - type: binary
+      language: go
+      build_script:
+        path: Go/1.21/build_go.sh
+        args: --version 1.21
+        docker_image: ubuntu:20.04
+    - type: container
+      image_name: "{{repo_name}}"
+      dockerfile: Dockerfile
+      registry: ghcr.io

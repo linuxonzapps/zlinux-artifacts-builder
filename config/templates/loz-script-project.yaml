@@ -1,0 +1,10 @@
+artifacts:
+  - type: script
+    build_script:
+      gh_name: github_project_name
+      path: path/to/the/build_script
+      args: -y
+      docker_image: ubuntu:22.04
+architecture: s390x
+schedule: "{{global_schedule}}"
+webhook: "{{global_webhook}}"
