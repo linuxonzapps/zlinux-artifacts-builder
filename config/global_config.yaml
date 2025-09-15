@@ -3,18 +3,6 @@ scan_organization: false  # If true, scan all repos in my-org
 repositories:           # Optional: Explicitly list repos if scan_organization is false
   - name: spire
     url: https://github.com/linuxonzapps/spire
-    commit: master  
-  - name: elasticsearch
-    url: https://github.com/linuxonzapps/elasticsearch
-    commit: main
-  - name: terraform
-    url: https://github.com/linuxonzapps/terraform
-    commit: main
-  - name: minio
-    url: https://github.com/linuxonzapps/minio
-    commit: master
-  - name: kind
-    url: https://github.com/linuxonzapps/kind
     commit: main
 #default_schedule: "0 * * * *"  # Hourly builds
 default_webhook: true
