@@ -4,6 +4,15 @@ repositories:           # Optional: Explicitly list repos if scan_organization i
   - name: spire
     url: https://github.com/linuxonzapps/spire
     commit: main
+  - name: terraform
+    url: https://github.com/linuxonzapps/terraform
+    commit: main
+  - name: bazel
+    url: https://github.com/linuxonzapps/bazel
+    commit: main
+  - name: kind
+    url: https://github.com/linuxonzapps/kind
+    commit: main
 #default_schedule: "0 * * * *"  # Hourly builds
 default_webhook: true
 script_repositories:

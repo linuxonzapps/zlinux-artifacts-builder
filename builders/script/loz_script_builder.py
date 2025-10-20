@@ -104,7 +104,7 @@ class ScriptBuilder(ArtifactBuilder):
                 registry = artifact.get('registry', 'ghcr.io')
                 image_name = artifact.get('image_name', repo_gh_name)
                 gh_token = os.environ.get('GH_TOKEN')
-                gh_push_user = os.environ.get('GH_PUSH_USER')
+                gh_push_user = os.environ.get('GH_PUSH_USER') # linuxonzapps, for example
                 docker_login_p1 = ["echo", f"{gh_token}"]
                 docker_login_p2 = ["docker", "login", f"{registry}", "-u", gh_push_user, "--password-stdin"]
                 docker_exec_pipe = self.execute_pipe_command(docker_login_p1, docker_login_p2)
@@ -116,8 +116,8 @@ class ScriptBuilder(ArtifactBuilder):
                 extract_image_tag_p2 = ["jq", ".[].RepoTags[]"]
                 image_tag = self.execute_pipe_command(extract_image_tag_p1, extract_image_tag_p2).strip('"')
                 self.logger.info(f"Container image: {image_tag}")
-                # Tag the image
-                image_tag_cmd = ["docker", "tag", f"{image_tag}", f"{registry}/{image_tag}"]
+                # Tag the image - e.g., docker tag $image_tag $registry/linuxonzapps/$image_tag
+                image_tag_cmd = ["docker", "tag", f"{image_tag}", f"{registry}/{gh_push_user}/{image_tag}"]
                 result = subprocess.run(image_tag_cmd, check=True, capture_output=True)
                 # Push to registry
                 push_cmd = ["docker", "push", f"{registry}/{gh_push_user}/{image_tag}"]
