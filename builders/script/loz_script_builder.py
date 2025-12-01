@@ -56,7 +56,7 @@ class ScriptBuilder(ArtifactBuilder):
                 gh_token = os.environ.get('GH_TOKEN')
                 gh_push_user = os.environ.get('GH_PUSH_USER')
                 subprocess.run(
-                        ["docker", "run", "--rm", "-e", f"DOCKER_USERNAME={docker_user}", "-e", f"DOCKER_PASSWORD={docker_pwd}", "-e", f"GH_TOKEN={gh_token}", "-e", f"GH_PUSH_USER={gh_push_user}", "-v", "/var/run/docker.sock:/var/run/docker.sock", "-v", f"{repo_path}:{repo_path}", "-v", f"{repo_path}:/app", "-v", f"{script_repo_path}:{script_repo_path}", "-w", "/app", docker_image] + cmd,
+                        ["docker", "run", "--rm", "-e", f"DOCKER_USERNAME={docker_user}", "-e", f"DOCKER_PASSWORD={docker_pwd}", "-e", f"GH_TOKEN={gh_token}", "-e", f"GH_PUSH_USER={gh_push_user}", "-v", "/var/run/docker.sock:/var/run/docker.sock", "-v", f"{repo_path}:{repo_path}", "-v", f"{script_repo_path}:{script_repo_path}", "-w", repo_path, docker_image] + cmd,
                     check=True
                 )
             else:

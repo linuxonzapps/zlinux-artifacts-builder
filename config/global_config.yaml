@@ -13,6 +13,18 @@ repositories:           # Optional: Explicitly list repos if scan_organization i
   - name: kind
     url: https://github.com/linuxonzapps/kind
     commit: main
+  - name: minio
+    url: https://github.com/linuxonzapps/minio
+    commit: main
+  - name: spark
+    url: https://github.com/linuxonzapps/spark
+    commit: main
+  - name: envoy
+    url: https://github.com/linuxonzapps/envoy
+    commit: main
+  - name: opa
+    url: https://github.com/linuxonzapps/opa
+    commit: main
 #default_schedule: "0 * * * *"  # Hourly builds
 default_webhook: true
 script_repositories:
