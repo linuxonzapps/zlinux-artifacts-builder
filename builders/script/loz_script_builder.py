@@ -78,8 +78,8 @@ class ScriptBuilder(ArtifactBuilder):
         checksum = generate_checksum(artifact_path)
         art_dirname = os.path.dirname(artifact_path)
         version = artifact.get('version', '1.0')
-        rpm_path = f"{art_dirname}/{repo_gh_name}-{version}-1.s390x.rpm" if os.path.exists(f"{art_dirname}/{repo_gh_name}-{version}-1.s390x.rpm") else None
-        deb_path = f"{art_dirname}/{repo_gh_name}_{version}_s390x.deb" if os.path.exists(f"{art_dirname}/{repo_gh_name}_{version}_s390x.deb") else None
+        rpm_path = f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.rpm" if os.path.exists(f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.rpm") else None
+        deb_path = f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.deb" if os.path.exists(f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.deb") else None
         container_path = f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.container.tar" if os.path.exists(f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.container.tar") else None
         self.logger.info(f"Publishing {artifact_path} with checksum {checksum}")
         try:

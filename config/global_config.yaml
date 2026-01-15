@@ -25,6 +25,18 @@ repositories:           # Optional: Explicitly list repos if scan_organization i
   - name: opa
     url: https://github.com/linuxonzapps/opa
     commit: main
+  - name: netty-tcnative
+    url: https://github.com/linuxonzapps/netty-tcnative
+    commit: main
+  - name: erlang
+    url: https://github.com/linuxonzapps/erlang
+    commit: main
+  - name: sysdig
+    url: https://github.com/linuxonzapps/sysdig
+    commit: main
+  - name: openresty
+    url: https://github.com/linuxonzapps/openresty
+    commit: main
 #default_schedule: "0 * * * *"  # Hourly builds
 default_webhook: true
 script_repositories:
