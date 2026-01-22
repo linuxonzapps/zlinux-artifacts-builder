@@ -1,13 +1,13 @@
 
 # Build System for Open-Source Artifacts
 
-This project, `zlinux-artifacts-builder`, is a modular, Dockerized build system designed to automate the generation, checksumming, and publishing of software artifacts optimized for the s390x architecture (IBM Z mainframes). It supports building from GitHub repositories, integrating with build scripts from repositories like `linux-on-ibm-z/scripts`, and handles multiple artifact types (binaries, Debian packages, RPM packages, container images). The system is template-based, allowing easy addition of new repositories under a GitHub organization, and supports various programming languages (Go, C/C++, Java, Python) for binary artifacts.
+This project, `zlinux-artifacts-builder`, is a modular, Dockerized build system designed to automate the generation, checksum, and publishing of software artifacts optimized for the s390x architecture (IBM Z mainframes). It supports building from GitHub repositories, integrating with build scripts from repositories like [linux-on-ibm-z](https://github.com/linux-on-ibm-z/scripts), can handle multiple artifact types (binaries, Debian packages, RPM packages, container images). The system is template-based, allowing easy addition of new repositories under a GitHub organization, and supports various programming languages (Go, C/C++, Java, Python) for binary artifacts.
 
 ## Features
-- **Modular Builders**: Separate builders for binaries (language-specific), Debian packages, RPM packages, and container images.
+- **Modular Builders**: Separate builders for binaries (language-specific), scipts, which can be extended to build Debian packages, RPM packages, and container images.
 - **Template-Based Configuration**: Reusable templates for artifact definitions, with overrides per repository.
-- **Script Integration**: Supports build scripts from multiple repositories, defaulting to `linux-on-ibm-z/scripts` for s390x-specific builds.
-- **s390x Compatibility**: All builds run in Docker containers with `--platform=linux/s390x`.
+- **Script Integration**: Supports build scripts from multiple repositories, defaulting to [linux-on-ibm-z](https://github.com/linux-on-ibm-z/scripts) for s390x-specific builds.
+- **s390x Compatibility**: All builds run in `s390x` Docker containers.
 - **Automated Publishing**: Publishes to GitHub Releases (binaries, Debian, RPMs) and GHCR (container images).
 - **Logging and Checksums**: Centralized logging and SHA256 checksums for artifact integrity.
 - **Extensibility**: Easy to add new languages, artifact types, or script repositories.
@@ -150,13 +150,13 @@ zlinux-artifacts-builder/
 ├── builders/                 # Builder classes for artifacts
 │   ├── binary/               # Add Language-specific binary builders, for example:
 │   │   ├── go_binary_builder.py
-│   │   ├── cpp_binary_builder.py
-│   │   ├── java_binary_builder.py
-│   │   ├── python_binary_builder.py
+│   │   ├── cpp_binary_builder.py (implement as needed)
+│   │   ├── java_binary_builder.py (implement as needed)
+│   │   ├── python_binary_builder.py (implement as needed)
 │   │   └── __init__.py
-│   ├── container/           # Container builder
-│   ├── debian/              # Debian package builder
-│   ├── rpm/                 # RPM package builder
+│   ├── container/           # Container builder - (implement as needed)
+│   ├── debian/              # Debian package builder - (implement as needed)
+│   ├── rpm/                 # RPM package builder - (implement as needed)
 │   ├── plugins/             # Builder interface
 │   ├── script/              # Script builder
 │   │   ├── loz_script_builder.py
