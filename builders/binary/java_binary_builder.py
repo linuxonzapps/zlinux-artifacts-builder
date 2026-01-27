@@ -83,3 +83,32 @@ class JavaBinaryBuilder(ArtifactBuilder):
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Failed to build Java artifact for {repo_gh_name}: {str(e)}")
             raise
+
+    def publish(self, artifact_path: str, repo_gh_name: str, artifact: dict):
+        from lib.checksum import generate_checksum
+
+        checksum = generate_checksum(artifact_path)
+        version = artifact.get("version", "1.0")
+
+        self.logger.info(
+            f"Publishing {artifact_path} with checksum {checksum} for {repo_gh_name}"
+        )
+
+        try:
+            subprocess.run(
+                [
+                    "gh", "release", "create",
+                    f"v{version}",
+                    "--title", f"Version {version}",
+                    "--generate-notes",
+                    artifact_path,
+                    f"{artifact_path}.sha256",
+                ],
+                cwd=os.path.dirname(artifact_path),
+                check=True
+            )
+            self.logger.info(f"Published {artifact_path} to GitHub Releases")
+
+        except subprocess.CalledProcessError as e:
+            self.logger.error(f"Failed to publish {artifact_path}: {str(e)}")
+            raise
