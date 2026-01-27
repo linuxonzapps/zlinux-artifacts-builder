@@ -6,6 +6,28 @@ import subprocess
 from monitoring.logger import Logger
 from builders.plugins.plugin_interface import ArtifactBuilder
 
+BUILD_SYSTEMS = {
+    "maven": {
+        "files": ["pom.xml"],
+        "command": ["mvn", "-DskipTests", "clean", "package"],
+        "build_dir": "target",
+        "docker_image": "maven:3.9-eclipse-temurin-17",
+    },
+    "gradle": {
+        "files": ["build.gradle", "build.gradle.kts"],
+        "command": ["gradle", "clean", "build", "-x", "test"],
+        "build_dir": os.path.join("build", "libs"),
+        "docker_image": "gradle:8.7-jdk17",
+    },
+}
+
+
+def detect_build_system(repo_path: str):
+    for system, config in BUILD_SYSTEMS.items():
+        for f in config["files"]:
+            if os.path.exists(os.path.join(repo_path, f)):
+                return system, config
+    return None, None
 
 class JavaBinaryBuilder(ArtifactBuilder):
     def __init__(self):
