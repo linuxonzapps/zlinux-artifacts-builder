@@ -78,13 +78,22 @@ class ScriptBuilder(ArtifactBuilder):
         checksum = generate_checksum(artifact_path)
         art_dirname = os.path.dirname(artifact_path)
         version = artifact.get('version', '1.0')
+        artifact_with_distro = f"{repo_gh_name}-{version}-linux-s390x.tar.gz"
+
+        try:
+           with open(f"{art_dirname}/.distro_zab.txt", 'r') as file:
+               distro_details = file.readline().strip()
+               artifact_with_distro = f"{repo_gh_name}-{version}-linux-{distro_details}-s390x.tar.gz"
+        except Exception as e:
+           print(f"An error occurred: {e}")
+
         rpm_path = f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.rpm" if os.path.exists(f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.rpm") else None
         deb_path = f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.deb" if os.path.exists(f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.deb") else None
         container_path = f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.container.tar" if os.path.exists(f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.container.tar") else None
         self.logger.info(f"Publishing {artifact_path} with checksum {checksum}")
         try:
             subprocess.run(
-                ["gh", "release", "create", f"v{version}", "--title", f"Version {version}", "--generate-notes", artifact_path, f"{artifact_path}.sha256"],
+                ["gh", "release", "create", f"v{version}", "--title", f"Version {version}", "--generate-notes", f"{artifact_path}#{artifact_with_distro}", f"{artifact_path}.sha256#{artifact_with_distro}.sha256"],
                 cwd=os.path.dirname(artifact_path),
                 check=True
             )
