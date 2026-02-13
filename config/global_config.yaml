@@ -37,8 +37,8 @@ repositories:           # Optional: Explicitly list repos if scan_organization i
   - name: openresty
     url: https://github.com/linuxonzapps/openresty
     commit: main
-  - name: postgresql-18
-    url: https://github.com/linuxonzapps/postgresql-18
+  - name: postgresql
+    url: https://github.com/linuxonzapps/postgresql
     commit: main
 #default_schedule: "0 * * * *"  # Hourly builds
 default_webhook: true
