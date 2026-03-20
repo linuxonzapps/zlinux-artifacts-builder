@@ -1,6 +1,3 @@
-#  Copyright Contributors to the Mainframe Software Hub for Linux Project.
-#  SPDX-License-Identifier: Apache-2.0
-
 import pytest
 import os
 import tempfile
