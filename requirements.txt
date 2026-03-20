@@ -1,2 +1,5 @@
 PyGithub>=1.58.0
 PyYAML>=5.1
+pytest>=7.4.0
+pytest-mock>=3.11.0
+pytest-cov>=4.1.0
