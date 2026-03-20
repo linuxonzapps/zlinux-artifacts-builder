@@ -78,26 +78,43 @@ class ScriptBuilder(ArtifactBuilder):
         checksum = generate_checksum(artifact_path)
         art_dirname = os.path.dirname(artifact_path)
         version = artifact.get('version', '1.0')
+        artifact_path_with_distro = f"{repo_gh_name}-{version}-linux-s390x.tar.gz"
+        distro_details = "ubuntu-22.04" # Default
+
+        try:
+           with open(f"{art_dirname}/.distro_zab.txt", 'r') as file:
+               distro_details = file.readline().strip()
+               artifact_path_with_distro = f"{art_dirname}/{repo_gh_name}-{version}-{distro_details}-linux-s390x.tar.gz"
+               # Rename atrifacts prior to publishing to indicate the distro it was built on
+               os.rename(artifact_path, artifact_path_with_distro)
+               os.rename(f"{artifact_path}.sha256", f"{artifact_path_with_distro}.sha256")
+        except Exception as e:
+           print(f"An error occurred: {e}")
+
         rpm_path = f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.rpm" if os.path.exists(f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.rpm") else None
         deb_path = f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.deb" if os.path.exists(f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.deb") else None
         container_path = f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.container.tar" if os.path.exists(f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.container.tar") else None
         self.logger.info(f"Publishing {artifact_path} with checksum {checksum}")
         try:
             subprocess.run(
-                ["gh", "release", "create", f"v{version}", "--title", f"Version {version}", "--generate-notes", artifact_path, f"{artifact_path}.sha256"],
+                ["gh", "release", "create", f"v{version}", "--title", f"Version {version}", "--generate-notes", f"{artifact_path_with_distro}", f"{artifact_path_with_distro}.sha256"],
                 cwd=os.path.dirname(artifact_path),
                 check=True
             )
             if rpm_path is not None:
+                rpm_path_with_distro = f"{art_dirname}/{repo_gh_name}-{version}-{distro_details}-linux-s390x.rpm"
+                os.rename(rpm_path, rpm_path_with_distro)
                 subprocess.run(
-                    ["gh", "release", "upload", f"v{version}", rpm_path],
-                    cwd=os.path.dirname(artifact_path),
+                    ["gh", "release", "upload", f"v{version}", rpm_path_with_distro],
+                    cwd=os.path.dirname(artifact_path_with_distro),
                     check=True
                 )
             if deb_path is not None:
+                deb_path_with_distro = f"{art_dirname}/{repo_gh_name}-{version}-{distro_details}-linux-s390x.deb"
+                os.rename(deb_path, deb_path_with_distro)
                 subprocess.run(
-                    ["gh", "release", "upload", f"v{version}", deb_path],
-                    cwd=os.path.dirname(artifact_path),
+                    ["gh", "release", "upload", f"v{version}", deb_path_with_distro],
+                    cwd=os.path.dirname(artifact_path_with_distro),
                     check=True
                 )
             if container_path is not None:
