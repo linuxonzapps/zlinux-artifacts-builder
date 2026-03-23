@@ -1,0 +1,15 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y sudo
+
+# Create a non-root user and add it to sudo to enable builds
+ARG USER_UID=1000
+ARG USER_GID=1000
+RUN groupadd --gid $USER_GID appuser && \
+    useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m appuser && \
+    usermod -aG sudo appuser && \
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER appuser
+ENV USER=appuser
+WORKDIR /home/appuser

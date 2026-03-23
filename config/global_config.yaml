@@ -3,7 +3,7 @@ scan_organization: false  # If true, scan all repos in my-org
 repositories:           # Optional: Explicitly list repos if scan_organization is false
   - name: spire
     url: https://github.com/linuxonzapps/spire
-    commit: main
+    commit: v1.14.1
   - name: terraform
     url: https://github.com/linuxonzapps/terraform
     commit: main
@@ -39,6 +39,18 @@ repositories:           # Optional: Explicitly list repos if scan_organization i
     commit: main
   - name: postgresql
     url: https://github.com/linuxonzapps/postgresql
+    commit: v16.12
+  - name: beats
+    url: https://github.com/linuxonzapps/beats
+    commit: main
+  - name: elasticsearch
+    url: https://github.com/linuxonzapps/elasticsearch
+    commit: main
+  - name: couchbase
+    url: https://github.com/linuxonzapps/couchbase
+    commit: main
+  - name: cockroach
+    url: https://github.com/linuxonzapps/cockroach
     commit: main
 #default_schedule: "0 * * * *"  # Hourly builds
 default_webhook: true

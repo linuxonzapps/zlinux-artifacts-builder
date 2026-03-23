@@ -17,6 +17,8 @@ class GitHubRepo:
         try:
             subprocess.run(cmd, check=True, capture_output=True)
             self.logger.info(f"Cloned {self.repo_url} at commit {commit}")
+            cmd = ["chmod", "-R", "777", temp_dir]
+            subprocess.run(cmd, check=True, capture_output=True)
             return temp_dir
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Clone failed: {e.stderr.decode()}")
