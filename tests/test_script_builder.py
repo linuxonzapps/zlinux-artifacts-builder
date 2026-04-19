@@ -307,6 +307,103 @@ class TestScriptBuilder:
         assert os.path.normpath(deb_path) == uploaded_file
 
     @patch('lib.checksum.generate_checksum')
+    def test_publish_with_distro_marker_renames_tarball(self, mock_checksum, temp_repo_dir, mocker):
+        """When .distro_zab.txt is present, the tarball is renamed with distro suffix before publishing."""
+        artifact_path = os.path.join(temp_repo_dir, "test-app-1.0.0-linux-s390x.tar.gz")
+        sha256_path = f"{artifact_path}.sha256"
+        with open(artifact_path, "w") as f:
+            f.write("fake tarball")
+        with open(sha256_path, "w") as f:
+            f.write("abc123")
+        with open(os.path.join(temp_repo_dir, ".distro_zab.txt"), "w") as f:
+            f.write("ubuntu-22.04\n")
+
+        mock_checksum.return_value = "abc123"
+        mock_run = mocker.patch('subprocess.run')
+
+        builder = ScriptBuilder()
+        builder.publish(artifact_path, "test-app", {"version": "1.0.0"})
+
+        renamed_tarball = os.path.join(
+            temp_repo_dir, "test-app-1.0.0-ubuntu-22.04-linux-s390x.tar.gz"
+        )
+        assert os.path.exists(renamed_tarball)
+        assert os.path.exists(f"{renamed_tarball}.sha256")
+        assert not os.path.exists(artifact_path)
+
+        mock_run.assert_called_once()
+        create_call_args = mock_run.call_args[0][0]
+        assert renamed_tarball in create_call_args
+        assert f"{renamed_tarball}.sha256" in create_call_args
+
+    @patch('lib.checksum.generate_checksum')
+    def test_publish_with_distro_marker_renames_rpm_and_deb(self, mock_checksum, temp_repo_dir, mocker):
+        """RPM and DEB companion artifacts also get renamed with the distro suffix when the marker is present."""
+        artifact_path = os.path.join(temp_repo_dir, "test-app-1.0.0-linux-s390x.tar.gz")
+        rpm_path = os.path.join(temp_repo_dir, "test-app-1.0.0-linux-s390x.rpm")
+        deb_path = os.path.join(temp_repo_dir, "test-app-1.0.0-linux-s390x.deb")
+        with open(artifact_path, "w") as f:
+            f.write("fake tarball")
+        with open(f"{artifact_path}.sha256", "w") as f:
+            f.write("abc123")
+        with open(rpm_path, "w") as f:
+            f.write("fake rpm")
+        with open(deb_path, "w") as f:
+            f.write("fake deb")
+        with open(os.path.join(temp_repo_dir, ".distro_zab.txt"), "w") as f:
+            f.write("ubuntu-22.04")
+
+        mock_checksum.return_value = "abc123"
+        mock_run = mocker.patch('subprocess.run')
+
+        builder = ScriptBuilder()
+        builder.publish(artifact_path, "test-app", {"version": "1.0.0"})
+
+        expected_rpm = os.path.join(
+            temp_repo_dir, "test-app-1.0.0-ubuntu-22.04-linux-s390x.rpm"
+        )
+        expected_deb = os.path.join(
+            temp_repo_dir, "test-app-1.0.0-ubuntu-22.04-linux-s390x.deb"
+        )
+        assert os.path.exists(expected_rpm)
+        assert os.path.exists(expected_deb)
+        assert not os.path.exists(rpm_path)
+        assert not os.path.exists(deb_path)
+
+        assert mock_run.call_count == 3
+        rpm_upload_args = mock_run.call_args_list[1][0][0]
+        deb_upload_args = mock_run.call_args_list[2][0][0]
+        assert "upload" in rpm_upload_args
+        assert os.path.normpath(rpm_upload_args[-1]) == os.path.normpath(expected_rpm)
+        assert "upload" in deb_upload_args
+        assert os.path.normpath(deb_upload_args[-1]) == os.path.normpath(expected_deb)
+
+    @patch('lib.checksum.generate_checksum')
+    def test_publish_empty_distro_marker_falls_back_to_plain_names(self, mock_checksum, temp_repo_dir, mocker):
+        """An empty .distro_zab.txt should NOT apply any distro suffix."""
+        artifact_path = os.path.join(temp_repo_dir, "test-app-1.0.0-linux-s390x.tar.gz")
+        rpm_path = os.path.join(temp_repo_dir, "test-app-1.0.0-linux-s390x.rpm")
+        with open(artifact_path, "w") as f:
+            f.write("fake tarball")
+        with open(rpm_path, "w") as f:
+            f.write("fake rpm")
+        with open(os.path.join(temp_repo_dir, ".distro_zab.txt"), "w") as f:
+            f.write("")
+
+        mock_checksum.return_value = "abc123"
+        mock_run = mocker.patch('subprocess.run')
+
+        builder = ScriptBuilder()
+        builder.publish(artifact_path, "test-app", {"version": "1.0.0"})
+
+        assert os.path.exists(artifact_path)
+        assert os.path.exists(rpm_path)
+
+        assert mock_run.call_count == 2
+        rpm_upload_args = mock_run.call_args_list[1][0][0]
+        assert os.path.normpath(rpm_upload_args[-1]) == os.path.normpath(rpm_path)
+
+    @patch('lib.checksum.generate_checksum')
     def test_publish_subprocess_error(self, mock_checksum, temp_repo_dir, mocker):
         """Test publish handles subprocess errors gracefully."""
         artifact_path = os.path.join(temp_repo_dir, "test-app-1.0.0-linux-s390x.tar.gz")
