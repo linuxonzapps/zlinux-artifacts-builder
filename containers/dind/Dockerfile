@@ -19,7 +19,7 @@ RUN echo \
   $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # Install Docker Engine
-RUN apt-get update && \
+RUN apt-get update && apt-get upgrade -y --no-install-recommends && \
     apt-get install -y docker-ce docker-ce-cli containerd.io vim && \
     # Cleanup: Remove package lists and temporary files
     rm -rf /var/lib/apt/lists/* && \

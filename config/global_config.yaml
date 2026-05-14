@@ -52,6 +52,21 @@ repositories:           # Optional: Explicitly list repos if scan_organization i
   - name: cockroach
     url: https://github.com/linuxonzapps/cockroach
     commit: main
+  - name: doxygen
+    url: https://github.com/linuxonzapps/doxygen
+    commit: main
+  - name: grafana
+    url: https://github.com/linuxonzapps/grafana
+    commit: main
+  - name: haproxy
+    url: https://github.com/linuxonzapps/haproxy
+    commit: main
+  - name: influxdb
+    url: https://github.com/linuxonzapps/influxdb
+    commit: main
+  - name: mysql
+    url: https://github.com/linuxonzapps/mysql
+    commit: v8.0.44
 #default_schedule: "0 * * * *"  # Hourly builds
 default_webhook: true
 script_repositories:
