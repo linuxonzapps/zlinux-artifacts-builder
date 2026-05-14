@@ -255,11 +255,14 @@ class TestScriptBuilder:
         """Test publishing with additional RPM artifact."""
         artifact_path = os.path.join(temp_repo_dir, "test-app-1.0.0-linux-s390x.tar.gz")
         rpm_path = os.path.join(temp_repo_dir, "test-app-1.0.0-linux-s390x.rpm")
+        distro_path = os.path.join(temp_repo_dir, ".distro_zab.txt")
         
         with open(artifact_path, "w") as f:
             f.write("fake tarball")
         with open(rpm_path, "w") as f:
             f.write("fake rpm")
+        with open(distro_path, "w") as f:
+            f.write("jammy")
         
         mock_checksum.return_value = "abc123"
         mock_run = mocker.patch('subprocess.run')
@@ -283,11 +286,14 @@ class TestScriptBuilder:
         """Test publishing with additional DEB artifact."""
         artifact_path = os.path.join(temp_repo_dir, "test-app-1.0.0-linux-s390x.tar.gz")
         deb_path = os.path.join(temp_repo_dir, "test-app-1.0.0-linux-s390x.deb")
+        distro_path = os.path.join(temp_repo_dir, ".distro_zab.txt")
         
         with open(artifact_path, "w") as f:
             f.write("fake tarball")
         with open(deb_path, "w") as f:
             f.write("fake deb")
+        with open(distro_path, "w") as f:
+            f.write("jammy")
         
         mock_checksum.return_value = "abc123"
         mock_run = mocker.patch('subprocess.run')
