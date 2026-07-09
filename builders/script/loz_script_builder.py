@@ -60,8 +60,9 @@ class ScriptBuilder(ArtifactBuilder):
                     check=True
                 )
             else:
+                gh_token = os.environ.get('GH_TOKEN')
                 subprocess.run(
-                        ["docker", "run", "--rm", "-v", f"{repo_path}:{repo_path}", "-v", f"{repo_path}:/app", "-v", f"{script_repo_path}:{script_repo_path}", "-w", "/app", docker_image] + cmd,
+                        ["docker", "run", "--rm", "-e", f"GH_TOKEN={gh_token}", "-v", f"{repo_path}:{repo_path}", "-v", f"{repo_path}:/app", "-v", f"{script_repo_path}:{script_repo_path}", "-w", "/app", docker_image] + cmd,
                     check=True
                 )
             if not os.path.exists(output_path):

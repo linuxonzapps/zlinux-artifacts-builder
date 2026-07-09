@@ -1,74 +1,88 @@
 organization: linuxonzapps
-scan_organization: false  # If true, scan all repos in my-org
-repositories:           # Optional: Explicitly list repos if scan_organization is false
-  - name: spire
-    url: https://github.com/linuxonzapps/spire
-    commit: v1.14.1
-  - name: terraform
-    url: https://github.com/linuxonzapps/terraform
-    commit: main
-  - name: bazel
-    url: https://github.com/linuxonzapps/bazel
-    commit: main
-  - name: kind
-    url: https://github.com/linuxonzapps/kind
-    commit: main
-  - name: minio
-    url: https://github.com/linuxonzapps/minio
-    commit: main
-  - name: spark
-    url: https://github.com/linuxonzapps/spark
-    commit: main
-  - name: envoy
-    url: https://github.com/linuxonzapps/envoy
-    commit: main
-  - name: opa
-    url: https://github.com/linuxonzapps/opa
-    commit: main
-  - name: netty-tcnative
-    url: https://github.com/linuxonzapps/netty-tcnative
-    commit: main
-  - name: erlang
-    url: https://github.com/linuxonzapps/erlang
-    commit: main
-  - name: sysdig
-    url: https://github.com/linuxonzapps/sysdig
-    commit: main
-  - name: openresty
-    url: https://github.com/linuxonzapps/openresty
-    commit: main
-  - name: postgresql
-    url: https://github.com/linuxonzapps/postgresql
-    commit: v16.12
-  - name: beats
-    url: https://github.com/linuxonzapps/beats
-    commit: main
-  - name: elasticsearch
-    url: https://github.com/linuxonzapps/elasticsearch
-    commit: main
-  - name: couchbase
-    url: https://github.com/linuxonzapps/couchbase
-    commit: main
-  - name: cockroach
-    url: https://github.com/linuxonzapps/cockroach
-    commit: main
-  - name: doxygen
-    url: https://github.com/linuxonzapps/doxygen
-    commit: main
-  - name: grafana
-    url: https://github.com/linuxonzapps/grafana
-    commit: main
-  - name: haproxy
-    url: https://github.com/linuxonzapps/haproxy
-    commit: main
-  - name: influxdb
-    url: https://github.com/linuxonzapps/influxdb
-    commit: main
-  - name: mysql
-    url: https://github.com/linuxonzapps/mysql
-    commit: v8.0.44
-#default_schedule: "0 * * * *"  # Hourly builds
+scan_organization: false
+repositories:
+- name: spire
+  url: https://github.com/linuxonzapps/spire
+  commit: v1.14.6
+- name: terraform
+  url: https://github.com/linuxonzapps/terraform
+  commit: main
+- name: bazel
+  url: https://github.com/linuxonzapps/bazel
+  commit: main
+- name: kind
+  url: https://github.com/linuxonzapps/kind
+  commit: main
+- name: minio
+  url: https://github.com/linuxonzapps/minio
+  commit: main
+- name: spark
+  url: https://github.com/linuxonzapps/spark
+  commit: main
+- name: envoy
+  url: https://github.com/linuxonzapps/envoy
+  commit: main
+- name: opa
+  url: https://github.com/linuxonzapps/opa
+  commit: main
+- name: netty-tcnative
+  url: https://github.com/linuxonzapps/netty-tcnative
+  commit: main
+- name: erlang
+  url: https://github.com/linuxonzapps/erlang
+  commit: main
+- name: sysdig
+  url: https://github.com/linuxonzapps/sysdig
+  commit: main
+- name: openresty
+  url: https://github.com/linuxonzapps/openresty
+  commit: main
+- name: postgresql
+  url: https://github.com/linuxonzapps/postgresql
+  commit: v16.12
+- name: beats
+  url: https://github.com/linuxonzapps/beats
+  commit: v9.3.3
+- name: elasticsearch
+  url: https://github.com/linuxonzapps/elasticsearch
+  commit: main
+- name: couchbase
+  url: https://github.com/linuxonzapps/couchbase
+  commit: main
+- name: cockroach
+  url: https://github.com/linuxonzapps/cockroach
+  commit: main
+- name: doxygen
+  url: https://github.com/linuxonzapps/doxygen
+  commit: main
+- name: grafana
+  url: https://github.com/linuxonzapps/grafana
+  commit: main
+- name: haproxy
+  url: https://github.com/linuxonzapps/haproxy
+  commit: main
+- name: influxdb
+  url: https://github.com/linuxonzapps/influxdb
+  commit: main
+- name: mysql
+  url: https://github.com/linuxonzapps/mysql
+  commit: v8.0.44
+- name: kibana
+  url: https://github.com/linuxonzapps/kibana
+  commit: main
+- name: mariadb-connector-odbc
+  url: https://github.com/linuxonzapps/mariadb-connector-odbc
+  commit: main
+- name: kong
+  url: https://github.com/linuxonzapps/kong
+  commit: main
+- name: glusterfs
+  url: https://github.com/linuxonzapps/glusterfs
+  commit: main
+- name: consul
+  url: https://github.com/linuxonzapps/consul
+  commit: main
 default_webhook: true
 script_repositories:
-  - name: linux-on-ibm-z-scripts
-    url: https://github.com/linux-on-ibm-z/scripts
+- name: linux-on-ibm-z-scripts
+  url: https://github.com/linux-on-ibm-z/scripts
