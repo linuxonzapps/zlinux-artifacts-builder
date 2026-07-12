@@ -2,7 +2,7 @@
 FROM dind:s390x
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y --no-install-recommends && apt-get install -y \
     python3 \
     python3-pip \
     pkg-config \

@@ -60,8 +60,9 @@ class ScriptBuilder(ArtifactBuilder):
                     check=True
                 )
             else:
+                gh_token = os.environ.get('GH_TOKEN')
                 subprocess.run(
-                        ["docker", "run", "--rm", "-v", f"{repo_path}:{repo_path}", "-v", f"{repo_path}:/app", "-v", f"{script_repo_path}:{script_repo_path}", "-w", "/app", docker_image] + cmd,
+                        ["docker", "run", "--rm", "-e", f"GH_TOKEN={gh_token}", "-v", f"{repo_path}:{repo_path}", "-v", f"{repo_path}:/app", "-v", f"{script_repo_path}:{script_repo_path}", "-w", "/app", docker_image] + cmd,
                     check=True
                 )
             if not os.path.exists(output_path):
@@ -78,30 +79,18 @@ class ScriptBuilder(ArtifactBuilder):
         checksum = generate_checksum(artifact_path)
         art_dirname = os.path.dirname(artifact_path)
         version = artifact.get('version', '1.0')
+        artifact_path_with_distro = f"{repo_gh_name}-{version}-linux-s390x.tar.gz"
+        distro_details = "ubuntu-22.04" # Default
 
-        # Only apply a distro suffix to artifact names when .distro_zab.txt
-        # is present AND non-empty. Otherwise keep original names so that
-        # the tarball and the companion rpm/deb stay consistent.
-        artifact_path_with_distro = artifact_path
-        distro_details = None
-        distro_file = os.path.join(art_dirname, ".distro_zab.txt")
-        if os.path.exists(distro_file):
-            try:
-                with open(distro_file, 'r') as file:
-                    distro_details = file.readline().strip() or None
-                if distro_details:
-                    artifact_path_with_distro = os.path.join(
-                        art_dirname,
-                        f"{repo_gh_name}-{version}-{distro_details}-linux-s390x.tar.gz",
-                    )
-                    os.rename(artifact_path, artifact_path_with_distro)
-                    sha256_src = f"{artifact_path}.sha256"
-                    if os.path.exists(sha256_src):
-                        os.rename(sha256_src, f"{artifact_path_with_distro}.sha256")
-            except Exception as e:
-                self.logger.warning(f"Failed to apply distro naming: {e}")
-                distro_details = None
-                artifact_path_with_distro = artifact_path
+        try:
+           with open(f"{art_dirname}/.distro_zab.txt", 'r') as file:
+               distro_details = file.readline().strip()
+               artifact_path_with_distro = f"{art_dirname}/{repo_gh_name}-{version}-{distro_details}-linux-s390x.tar.gz"
+               # Rename atrifacts prior to publishing to indicate the distro it was built on
+               os.rename(artifact_path, artifact_path_with_distro)
+               os.rename(f"{artifact_path}.sha256", f"{artifact_path_with_distro}.sha256")
+        except Exception as e:
+           print(f"An error occurred: {e}")
 
         rpm_path = f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.rpm" if os.path.exists(f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.rpm") else None
         deb_path = f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.deb" if os.path.exists(f"{art_dirname}/{repo_gh_name}-{version}-linux-s390x.deb") else None
@@ -114,22 +103,18 @@ class ScriptBuilder(ArtifactBuilder):
                 check=True
             )
             if rpm_path is not None:
-                rpm_upload_path = rpm_path
-                if distro_details:
-                    rpm_upload_path = f"{art_dirname}/{repo_gh_name}-{version}-{distro_details}-linux-s390x.rpm"
-                    os.rename(rpm_path, rpm_upload_path)
+                rpm_path_with_distro = f"{art_dirname}/{repo_gh_name}-{version}-{distro_details}-linux-s390x.rpm"
+                os.rename(rpm_path, rpm_path_with_distro)
                 subprocess.run(
-                    ["gh", "release", "upload", f"v{version}", rpm_upload_path],
+                    ["gh", "release", "upload", f"v{version}", rpm_path_with_distro],
                     cwd=os.path.dirname(artifact_path_with_distro),
                     check=True
                 )
             if deb_path is not None:
-                deb_upload_path = deb_path
-                if distro_details:
-                    deb_upload_path = f"{art_dirname}/{repo_gh_name}-{version}-{distro_details}-linux-s390x.deb"
-                    os.rename(deb_path, deb_upload_path)
+                deb_path_with_distro = f"{art_dirname}/{repo_gh_name}-{version}-{distro_details}-linux-s390x.deb"
+                os.rename(deb_path, deb_path_with_distro)
                 subprocess.run(
-                    ["gh", "release", "upload", f"v{version}", deb_upload_path],
+                    ["gh", "release", "upload", f"v{version}", deb_path_with_distro],
                     cwd=os.path.dirname(artifact_path_with_distro),
                     check=True
                 )
