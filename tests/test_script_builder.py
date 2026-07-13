@@ -274,12 +274,13 @@ class TestScriptBuilder:
         # Should call gh release twice: create + upload
         assert mock_run.call_count == 2
         
-        # Verify upload call
+        # Verify upload call: the rpm is renamed with the distro suffix before upload
+        expected_rpm = os.path.join(temp_repo_dir, "test-app-1.0.0-jammy-linux-s390x.rpm")
         upload_call = mock_run.call_args_list[1]
         assert "upload" in upload_call[0][0]
         # Normalize paths for cross-platform comparison
         uploaded_file = os.path.normpath(upload_call[0][0][-1])
-        assert os.path.normpath(rpm_path) == uploaded_file
+        assert os.path.normpath(expected_rpm) == uploaded_file
 
     @patch('lib.checksum.generate_checksum')
     def test_publish_with_deb(self, mock_checksum, temp_repo_dir, mocker):
@@ -305,12 +306,13 @@ class TestScriptBuilder:
         # Should call gh release twice: create + upload
         assert mock_run.call_count == 2
         
-        # Verify upload call
+        # Verify upload call: the deb is renamed with the distro suffix before upload
+        expected_deb = os.path.join(temp_repo_dir, "test-app-1.0.0-jammy-linux-s390x.deb")
         upload_call = mock_run.call_args_list[1]
         assert "upload" in upload_call[0][0]
         # Normalize paths for cross-platform comparison
         uploaded_file = os.path.normpath(upload_call[0][0][-1])
-        assert os.path.normpath(deb_path) == uploaded_file
+        assert os.path.normpath(expected_deb) == uploaded_file
 
     @patch('lib.checksum.generate_checksum')
     def test_publish_subprocess_error(self, mock_checksum, temp_repo_dir, mocker):
