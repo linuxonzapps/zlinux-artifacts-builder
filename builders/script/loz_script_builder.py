@@ -98,7 +98,7 @@ class ScriptBuilder(ArtifactBuilder):
         self.logger.info(f"Publishing {artifact_path} with checksum {checksum}")
         try:
             subprocess.run(
-                ["gh", "release", "create", f"v{version}", "--title", f"Version {version}", "--generate-notes", f"{artifact_path_with_distro}", f"{artifact_path_with_distro}.sha256"],
+                ["gh", "release", "create", f"v{version}", "--target", f"v{version}", "--title", f"Version {version}", "--generate-notes", f"{artifact_path_with_distro}", f"{artifact_path_with_distro}.sha256"],
                 cwd=os.path.dirname(artifact_path),
                 check=True
             )

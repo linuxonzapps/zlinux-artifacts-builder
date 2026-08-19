@@ -9,7 +9,7 @@ repositories:
   commit: main
 - name: bazel
   url: https://github.com/linuxonzapps/bazel
-  commit: main
+  commit: v9.2.0
 - name: kind
   url: https://github.com/linuxonzapps/kind
   commit: main
@@ -24,7 +24,7 @@ repositories:
   commit: main
 - name: opa
   url: https://github.com/linuxonzapps/opa
-  commit: main
+  commit: v1.18.2
 - name: netty-tcnative
   url: https://github.com/linuxonzapps/netty-tcnative
   commit: main
@@ -36,13 +36,13 @@ repositories:
   commit: main
 - name: openresty
   url: https://github.com/linuxonzapps/openresty
-  commit: main
+  commit: v1.31.1.1
 - name: postgresql
   url: https://github.com/linuxonzapps/postgresql
   commit: v16.12
 - name: beats
   url: https://github.com/linuxonzapps/beats
-  commit: v9.3.3
+  commit: v9.4.3
 - name: elasticsearch
   url: https://github.com/linuxonzapps/elasticsearch
   commit: main
@@ -72,7 +72,7 @@ repositories:
   commit: main
 - name: mariadb-connector-odbc
   url: https://github.com/linuxonzapps/mariadb-connector-odbc
-  commit: main
+  commit: v3.2.9
 - name: kong
   url: https://github.com/linuxonzapps/kong
   commit: main
@@ -81,6 +81,12 @@ repositories:
   commit: main
 - name: consul
   url: https://github.com/linuxonzapps/consul
+  commit: main
+- name: cloudstack
+  url: https://github.com/linuxonzapps/cloudstack
+  commit: main
+- name: falco
+  url: https://github.com/linuxonzapps/falco
   commit: main
 default_webhook: true
 script_repositories:
