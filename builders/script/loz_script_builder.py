@@ -24,7 +24,7 @@ class ScriptBuilder(ArtifactBuilder):
         output, _ = p2.communicate()
         return output.strip()
 
-    def natural_sort_key(s):
+    def natural_sort_key(self, s):
         return [
             int(text) if text.isdigit() else text.lower()
             for text in re.split(r"(\d+)", s)
