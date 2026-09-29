@@ -149,7 +149,7 @@ class ScriptBuilder(ArtifactBuilder):
                             repo_tags.extend(tags)
                        if repo_tags:
                            # Sort using the natural sorting key
-                           repo_tags.sort(key=natural_sort_key)
+                           repo_tags.sort(key=self.natural_sort_key)
                            image_tag = repo_tags[-1]
                        else:
                             self.logger.info(f"RepoTags not found")
