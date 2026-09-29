@@ -12,7 +12,7 @@ repositories:
   commit: v9.2.0
 - name: kind
   url: https://github.com/linuxonzapps/kind
-  commit: main
+  commit: v0.33.0
 - name: minio
   url: https://github.com/linuxonzapps/minio
   commit: main
@@ -21,7 +21,7 @@ repositories:
   commit: main
 - name: envoy
   url: https://github.com/linuxonzapps/envoy
-  commit: main
+  commit: v1.39.0
 - name: opa
   url: https://github.com/linuxonzapps/opa
   commit: v1.18.2
@@ -42,7 +42,7 @@ repositories:
   commit: v16.12
 - name: beats
   url: https://github.com/linuxonzapps/beats
-  commit: v9.4.3
+  commit: v9.5.0
 - name: elasticsearch
   url: https://github.com/linuxonzapps/elasticsearch
   commit: main
@@ -75,7 +75,7 @@ repositories:
   commit: v3.2.9
 - name: kong
   url: https://github.com/linuxonzapps/kong
-  commit: main
+  commit: v3.9.3
 - name: glusterfs
   url: https://github.com/linuxonzapps/glusterfs
   commit: main
@@ -87,7 +87,7 @@ repositories:
   commit: main
 - name: falco
   url: https://github.com/linuxonzapps/falco
-  commit: main
+  commit: v0.44.1
 default_webhook: true
 script_repositories:
 - name: linux-on-ibm-z-scripts

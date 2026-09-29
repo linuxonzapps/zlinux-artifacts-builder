@@ -131,8 +131,10 @@ class ScriptBuilder(ArtifactBuilder):
                 load_cmd = ["docker", "load", "-i", container_path]
                 # Obtain image tag and retag it with registry
                 extract_image_tag_p1 = ["tar", "-xOf", f"{container_path}", "manifest.json"]
-                extract_image_tag_p2 = ["jq", ".[].RepoTags[]"]
-                image_tag = self.execute_pipe_command(extract_image_tag_p1, extract_image_tag_p2).strip('"')
+                extract_image_tag_p2 = ["jq", "-r",".[].RepoTags[]?"]
+                extract_image_tag_p3 = ["sort", "-V"]
+                extract_image_tag_p4 = ["tail", "-n", "1"]
+                image_tag = self.execute_pipe_command(extract_image_tag_p1, extract_image_tag_p2, extract_image_tag_p3, extract_image_tag_p4).strip('"')
                 self.logger.info(f"Container image: {image_tag}")
                 # Tag the image - e.g., docker tag $image_tag $registry/linuxonzapps/$image_tag
                 image_tag_cmd = ["docker", "tag", f"{image_tag}", f"{registry}/{gh_push_user}/{image_tag}"]
