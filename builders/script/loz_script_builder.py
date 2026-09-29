@@ -3,6 +3,9 @@
 
 import os
 import subprocess
+import json
+import re
+import tarfile
 from monitoring.logger import Logger
 from builders.plugins.plugin_interface import ArtifactBuilder
 
@@ -20,6 +23,12 @@ class ScriptBuilder(ArtifactBuilder):
         p1.stdout.close()
         output, _ = p2.communicate()
         return output.strip()
+
+    def natural_sort_key(s):
+        return [
+            int(text) if text.isdigit() else text.lower()
+            for text in re.split(r"(\d+)", s)
+        ]
 
     def build(self, repo_path: str, repo_gh_name: str, artifact: dict) -> str:
         build_script = artifact.get('build_script', {})
@@ -121,6 +130,7 @@ class ScriptBuilder(ArtifactBuilder):
             if container_path is not None:
                 registry = artifact.get('registry', 'ghcr.io')
                 image_name = artifact.get('image_name', repo_gh_name)
+                image_tag = f"{image_name}:latest"
                 gh_token = os.environ.get('GH_TOKEN')
                 gh_push_user = os.environ.get('GH_PUSH_USER') # linuxonzapps, for example
                 docker_login_p1 = ["echo", f"{gh_token}"]
@@ -128,14 +138,21 @@ class ScriptBuilder(ArtifactBuilder):
                 docker_exec_pipe = self.execute_pipe_command(docker_login_p1, docker_login_p2)
                 self.logger.info(f"docker login returned with: {docker_exec_pipe}")
                 # Load image from tar
-                load_cmd = ["docker", "load", "-i", container_path]
-                # Obtain image tag and retag it with registry
-                extract_image_tag_p1 = ["tar", "-xOf", f"{container_path}", "manifest.json"]
-                extract_image_tag_p2 = ["jq", "-r",".[].RepoTags[]?"]
-                extract_image_tag_p3 = ["sort", "-V"]
-                extract_image_tag_p4 = ["tail", "-n", "1"]
-                image_tag = self.execute_pipe_command(extract_image_tag_p1, extract_image_tag_p2, extract_image_tag_p3, extract_image_tag_p4).strip('"')
-                self.logger.info(f"Container image: {image_tag}")
+                with tarfile.open(container_path, "r") as tar:
+                   manifest_file = tar.extractfile("manifest.json")
+                   if manifest_file:
+                       data = json.loads(manifest_file.read().decode("utf-8"))
+                       repo_tags = []
+                       for item in data:
+                           tags = item.get("RepoTags")
+                           if isinstance(tags, list):
+                            repo_tags.extend(tags)
+                       if repo_tags:
+                           # Sort using the natural sorting key
+                           repo_tags.sort(key=natural_sort_key)
+                           image_tag = repo_tags[-1]
+                       else:
+                            self.logger.info(f"RepoTags not found")
                 # Tag the image - e.g., docker tag $image_tag $registry/linuxonzapps/$image_tag
                 image_tag_cmd = ["docker", "tag", f"{image_tag}", f"{registry}/{gh_push_user}/{image_tag}"]
                 result = subprocess.run(image_tag_cmd, check=True, capture_output=True)
